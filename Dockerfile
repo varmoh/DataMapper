@@ -10,4 +10,4 @@ COPY server.js .
 
 RUN npm i -g npm@latest
 RUN npm install
-RUN npm start
+ENTRYPOINT ["npm","start"]
