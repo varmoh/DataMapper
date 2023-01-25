@@ -27,5 +27,5 @@ app.get('/js/*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("Nodejs server running on 172.17.0.2:%s", PORT);
+    console.log("Nodejs server running on http://localhost:%s", PORT);
 });

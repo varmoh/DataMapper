@@ -17,17 +17,17 @@ Handlebars files go to `views` directory.
 Example on how to access handlebars in browser:
 
 ```
-http://172.17.0.2:3000/hbs/my/restful/url/myFile
+http://localhost:3000/hbs/my/restful/url/myFile
 ```
 
 ## Javascript
 
 Javascript files go to `js` directory.
 
-Example on how to access javascript in browser:
+Example on how to access javascript files in browser:
 
 ```
-http://172.17.0.2:3000/js/my/restful/url/myScript
+http://localhost:3000/js/my/restful/url/myScript
 ```
 
 *Note!* URL must not end with `.js` extension.
