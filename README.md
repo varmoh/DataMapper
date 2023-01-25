@@ -1,6 +1,6 @@
 # DataMapper
 
-Re-formatting data structures on the level of configuration files
+Testing handlebars and javascript functionality.
 
 ## Docker
 
@@ -31,7 +31,3 @@ http://localhost:3000/js/my/restful/url/myScript
 ```
 
 *Note!* URL must not end with `.js` extension.
-
-# Source code
-
-Please use https://koodivaramu.eesti.ee/buerokratt/plug-and-play/dmapper as source code at the moment.
