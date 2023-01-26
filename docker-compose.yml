@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  node:
+    container_name: node
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    networks:
+      - node
+
+networks:
+  node:
+    driver: bridge

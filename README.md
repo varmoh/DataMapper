@@ -1,7 +1,33 @@
 # DataMapper
 
-Re-formatting data structures on the level of configuration files
+Testing handlebars and javascript functionality.
 
-# Source code
+## Docker
 
-Please use https://koodivaramu.eesti.ee/buerokratt/plug-and-play/dmapper as source code at the moment.
+To run the application using docker run:
+
+```
+docker-compose up -d
+```
+
+## Handlebars
+
+Handlebars files go to `views` directory.
+
+Example on how to access handlebars in browser:
+
+```
+http://localhost:3000/hbs/my/restful/url/myFile
+```
+
+## Javascript
+
+Javascript files go to `js` directory.
+
+Example on how to access javascript files in browser:
+
+```
+http://localhost:3000/js/my/restful/url/myScript
+```
+
+*Note!* URL must not end with `.js` extension.
