@@ -28,6 +28,7 @@ app.get("/js/*", (req, res) => {
   res.send(fs.readFileSync(__dirname + req.path + ".js").toString());
 });
 
+// NOTE: This service is only for testing purposes. Needs to be replaced with actual mail service.
 app.post("/js/email/*", (req, res) => {
   const { to, subject, text } = req.body;
   try {
