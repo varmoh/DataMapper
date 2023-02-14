@@ -54,6 +54,14 @@ app.post("/js/email/*", (req, res) => {
   }
 });
 
+app.post("/example/post", (req, res) => {
+    const { name } = req.body;
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    console.log("POST endpoint received "+JSON.stringify(req.body));
+    let resJson = "{\"message\": \"received value "+name+"\"}";
+    res.end(resJson);
+})
+
 app.listen(PORT, () => {
   console.log("Nodejs server running on http://localhost:%s", PORT);
 });
