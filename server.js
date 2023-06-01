@@ -1,6 +1,5 @@
 import express from "express";
 import { create } from "express-handlebars";
-import * as html_to_pdf from "html-pdf-node";
 import fs from "fs";
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
