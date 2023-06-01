@@ -2,10 +2,13 @@ import express from "express";
 import { create } from "express-handlebars";
 import * as html_to_pdf from "html-pdf-node";
 import fs from "fs";
-
+import jsdom from "jsdom";
+const { JSDOM } = jsdom;
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
+import { generatePdf } from "./js/generate/pdf.js";
+import { generateHTMLTable } from "./js/convert/pdf.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = 3000;
@@ -21,22 +24,34 @@ app.get("/", (req, res) => {
   res.render("home", { title: "Home" });
 });
 
-app.get("/hbs/*", (req, res) => {
-  res.render(req.params[0]);
+app.post("/hbs/*", (req, res) => {
+  res.render(req.params[0], req.body, function (_, response) {
+    if (req.get("type") === "csv") {
+      res.json({ response });
+    } else if (req.get("type") === "json") {
+      res.json(JSON.parse(response));
+    }
+  });
 });
 
-app.get("/js/convert/pdf", (req, res) => {
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", "attachment; filename=chat-history.pdf");
+app.post("/js/convert/pdf", (req, res) => {
+  const filename = "chat-history";
   const template = fs
     .readFileSync(__dirname + "/views/pdf.handlebars")
     .toString();
-  let file = { content: template };
-  let options = { format: "A4" };
+  const dom = new JSDOM(template);
+  generateHTMLTable(
+    req.body.data,
+    dom.window.document.getElementById("chatHistoryTable")
+  );
+  generatePdf(filename, dom.window.document.documentElement.innerHTML, res);
+});
 
-  html_to_pdf.generatePdf(file, options).then((pdfBuffer) => {
-    res.send(pdfBuffer);
-  });
+app.post("/js/generate/pdf", (req, res) => {
+  const filename = req.body.filename;
+  const template = req.body.template;
+
+  generatePdf(filename, template, res);
 });
 
 app.get("/js/*", (req, res) => {
