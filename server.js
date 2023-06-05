@@ -7,6 +7,7 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
 import { generatePdf } from "./js/generate/pdf.js";
+import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
 import { generateHTMLTable } from "./js/convert/pdf.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -38,7 +39,6 @@ app.post("/js/convert/pdf", (req, res) => {
     dom.window.document.getElementById("chatHistoryTable")
   );
   generatePdfToBase64(
-    filename,
     dom.window.document.documentElement.innerHTML,
     res
   );
