@@ -37,7 +37,11 @@ app.post("/js/convert/pdf", (req, res) => {
     req.body.data,
     dom.window.document.getElementById("chatHistoryTable")
   );
-  generatePdf(filename, dom.window.document.documentElement.innerHTML, res);
+  generatePdfToBase64(
+    filename,
+    dom.window.document.documentElement.innerHTML,
+    res
+  );
 });
 
 app.post("/js/generate/pdf", (req, res) => {
