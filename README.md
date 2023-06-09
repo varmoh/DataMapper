@@ -30,4 +30,28 @@ Example on how to access javascript files in browser:
 http://localhost:3000/js/my/restful/url/myScript
 ```
 
-*Note!* URL must not end with `.js` extension.
+_Note!_ URL must not end with `.js` extension.
+
+## Running on M1 machines
+
+Build using this Dockerfile when running on M1 machines
+
+```
+FROM node:19-alpine
+
+RUN apk add --no-cache chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+ENV NODE_ENV development
+WORKDIR /workspace/app/
+
+COPY js js
+COPY views views
+COPY package.json .
+COPY server.js .
+
+RUN npm i -g npm@latest
+RUN npm install
+ENTRYPOINT ["npm","start"]
+```
