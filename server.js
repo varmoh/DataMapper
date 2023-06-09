@@ -9,11 +9,12 @@ import sendMockEmail from "./js/email/sendMockEmail.js";
 import { generatePdf } from "./js/generate/pdf.js";
 import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
 import { generateHTMLTable } from "./js/convert/pdf.js";
+import * as helpers from "./lib/helpers.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-const hbs = create({});
+const hbs = create({ helpers });
 app.use(express.json());
 
 app.engine("handlebars", hbs.engine);
@@ -24,8 +25,14 @@ app.get("/", (req, res) => {
   res.render("home", { title: "Home" });
 });
 
-app.get("/hbs/*", (req, res) => {
-  res.render(req.params[0]);
+app.post("/hbs/*", (req, res) => {
+  res.render(req.params[0], req.body, function (_, response) {
+    if (req.get("type") === "csv") {
+      res.json({ response });
+    } else if (req.get("type") === "json") {
+      res.json(JSON.parse(response));
+    }
+  });
 });
 
 app.post("/js/convert/pdf", (req, res) => {
@@ -38,10 +45,7 @@ app.post("/js/convert/pdf", (req, res) => {
     req.body.data,
     dom.window.document.getElementById("chatHistoryTable")
   );
-  generatePdfToBase64(
-    dom.window.document.documentElement.innerHTML,
-    res
-  );
+  generatePdfToBase64(dom.window.document.documentElement.innerHTML, res);
 });
 
 app.post("/js/generate/pdf", (req, res) => {
@@ -67,12 +71,12 @@ app.post("/js/email/*", (req, res) => {
 });
 
 app.post("/example/post", (req, res) => {
-    const { name } = req.body;
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    console.log("POST endpoint received "+JSON.stringify(req.body));
-    let resJson = "{\"message\": \"received value "+name+"\"}";
-    res.end(resJson);
-})
+  const { name } = req.body;
+  res.writeHead(200, { "Content-Type": "application/json" });
+  console.log("POST endpoint received " + JSON.stringify(req.body));
+  let resJson = '{"message": "received value ' + name + '"}';
+  res.end(resJson);
+});
 
 app.listen(PORT, () => {
   console.log("Nodejs server running on http://localhost:%s", PORT);
