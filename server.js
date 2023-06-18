@@ -3,15 +3,20 @@ import { create } from "express-handlebars";
 import * as html_to_pdf from "html-pdf-node";
 import fs from "fs";
 
+import encryption from './controllers/encryption.js';
+import decryption from './controllers/decryption.js';
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 const hbs = create({});
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use('/encryption', encryption);
+app.use('/decryption', decryption);
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
