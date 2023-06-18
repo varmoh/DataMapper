@@ -2,21 +2,37 @@ import express from "express";
 import { create } from "express-handlebars";
 import * as html_to_pdf from "html-pdf-node";
 import fs from "fs";
+import crypto from "crypto";
 
-import encryption from './controllers/encryption.js';
-import decryption from './controllers/decryption.js';
+import encryption from "./controllers/encryption.js";
+import decryption from "./controllers/decryption.js";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+  modulusLength: 2048,
+});
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const hbs = create({});
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-app.use('/encryption', encryption);
-app.use('/decryption', decryption);
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  "/encryption",
+  encryption({
+    publicKey: publicKey,
+    privateKey: privateKey,
+  })
+);
+app.use(
+  "/decryption",
+  decryption({
+    publicKey: publicKey,
+    privateKey: privateKey,
+  })
+);
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
@@ -60,12 +76,12 @@ app.post("/js/email/*", (req, res) => {
 });
 
 app.post("/example/post", (req, res) => {
-    const { name } = req.body;
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    console.log("POST endpoint received "+JSON.stringify(req.body));
-    let resJson = "{\"message\": \"received value "+name+"\"}";
-    res.end(resJson);
-})
+  const { name } = req.body;
+  res.writeHead(200, { "Content-Type": "application/json" });
+  console.log("POST endpoint received " + JSON.stringify(req.body));
+  let resJson = '{"message": "received value ' + name + '"}';
+  res.end(resJson);
+});
 
 app.listen(PORT, () => {
   console.log("Nodejs server running on http://localhost:%s", PORT);
