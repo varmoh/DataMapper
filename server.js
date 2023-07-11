@@ -2,16 +2,19 @@ import express from "express";
 import { create } from "express-handlebars";
 import * as html_to_pdf from "html-pdf-node";
 import fs from "fs";
-
+import files from './controllers/files.js';
+import * as helpers from "./lib/helpers.js";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
-const hbs = create({});
+const hbs = create({ helpers });
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use('/file-manager', files);
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
@@ -55,11 +58,8 @@ app.post("/js/email/*", (req, res) => {
 });
 
 app.post("/example/post", (req, res) => {
-    const { name } = req.body;
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    console.log("POST endpoint received "+JSON.stringify(req.body));
-    let resJson = "{\"message\": \"received value "+name+"\"}";
-    res.end(resJson);
+  console.log(`POST endpoint received ${JSON.stringify(req.body)}`)
+  res.status(200).json({ message: `received value ${req.body.name}` })
 })
 
 app.listen(PORT, () => {
