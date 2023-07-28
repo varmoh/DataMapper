@@ -5,17 +5,38 @@ import secrets from "./controllers/secrets.js";
 import fs from "fs";
 import files from "./controllers/files.js";
 import * as helpers from "./lib/helpers.js";
+import crypto from "crypto";
+
+import encryption from "./controllers/encryption.js";
+import decryption from "./controllers/decryption.js";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+  modulusLength: 2048,
+});
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const hbs = create({ helpers });
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use("/file-manager", files);
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  "/encryption",
+  encryption({
+    publicKey: publicKey,
+    privateKey: privateKey,
+  })
+);
+app.use(
+  "/decryption",
+  decryption({
+    publicKey: publicKey,
+    privateKey: privateKey,
+  })
+);
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");

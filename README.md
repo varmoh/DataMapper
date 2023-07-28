@@ -31,3 +31,19 @@ http://localhost:3000/js/my/restful/url/myScript
 ```
 
 *Note!* URL must not end with `.js` extension.
+
+
+## Apple Silicon
+
+If your are building the docker file for apple silicon please change
+
+`FROM node:19`
+
+To
+
+```
+FROM node:19-alpine
+RUN apk add --no-cache chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+```
