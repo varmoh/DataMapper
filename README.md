@@ -30,8 +30,7 @@ Example on how to access javascript files in browser:
 http://localhost:3000/js/my/restful/url/myScript
 ```
 
-*Note!* URL must not end with `.js` extension.
-
+_Note!_ URL must not end with `.js` extension.
 
 ## Apple Silicon
 

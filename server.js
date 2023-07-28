@@ -1,6 +1,7 @@
 import express from "express";
 import { create } from "express-handlebars";
-import * as html_to_pdf from "html-pdf-node";
+import jsdom from "jsdom";
+const { JSDOM } = jsdom;
 import secrets from "./controllers/secrets.js";
 import fs from "fs";
 import files from "./controllers/files.js";
@@ -12,6 +13,10 @@ import decryption from "./controllers/decryption.js";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
+import { generatePdf } from "./js/generate/pdf.js";
+import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
+import { generateHTMLTable } from "./js/convert/pdf.js";
+import * as helpers from "./lib/helpers.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
   modulusLength: 2048,
@@ -56,18 +61,24 @@ app.post("/hbs/*", (req, res) => {
   });
 });
 
-app.get("/js/convert/pdf", (req, res) => {
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", "attachment; filename=chat-history.pdf");
+app.post("/js/convert/pdf", (req, res) => {
+  const filename = "chat-history";
   const template = fs
     .readFileSync(__dirname + "/views/pdf.handlebars")
     .toString();
-  let file = { content: template };
-  let options = { format: "A4" };
+  const dom = new JSDOM(template);
+  generateHTMLTable(
+    req.body.data,
+    dom.window.document.getElementById("chatHistoryTable")
+  );
+  generatePdfToBase64(dom.window.document.documentElement.innerHTML, res);
+});
 
-  html_to_pdf.generatePdf(file, options).then((pdfBuffer) => {
-    res.send(pdfBuffer);
-  });
+app.post("/js/generate/pdf", (req, res) => {
+  const filename = req.body.filename;
+  const template = req.body.template;
+
+  generatePdf(filename, template, res);
 });
 
 app.get("/js/*", (req, res) => {

@@ -1,4 +1,4 @@
-export const generateHTMLTable = (messages) => {
+export const generateHTMLTable = (messages, chatHistoryTable) => {
   let _html = `<tr class="header">
                   <th style="text-align: left">author</th>
                   <th style="text-align: left">author role</th>
@@ -28,11 +28,4 @@ export const generateHTMLTable = (messages) => {
   }
 
   chatHistoryTable.innerHTML = _html;
-};
-
-export const populateHTML = () => {
-  let table, tr;
-  table = document.getElementById("chatHistoryTable");
-  tr = table.getElementsByTagName("tr");
-  return table;
 };
