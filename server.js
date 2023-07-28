@@ -5,7 +5,6 @@ const { JSDOM } = jsdom;
 import secrets from "./controllers/secrets.js";
 import fs from "fs";
 import files from "./controllers/files.js";
-import * as helpers from "./lib/helpers.js";
 import crypto from "crypto";
 
 import encryption from "./controllers/encryption.js";
