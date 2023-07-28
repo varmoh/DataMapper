@@ -3,6 +3,8 @@ FROM node:19
 ENV NODE_ENV development
 WORKDIR /workspace/app/
 
+COPY controllers controllers
+COPY lib lib
 COPY js js
 COPY views views
 COPY package.json .

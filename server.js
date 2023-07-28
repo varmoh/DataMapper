@@ -1,8 +1,15 @@
 import express from "express";
 import { create } from "express-handlebars";
-import fs from "fs";
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
+import secrets from "./controllers/secrets.js";
+import fs from "fs";
+import files from "./controllers/files.js";
+import * as helpers from "./lib/helpers.js";
+import crypto from "crypto";
+
+import encryption from "./controllers/encryption.js";
+import decryption from "./controllers/decryption.js";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import sendMockEmail from "./js/email/sendMockEmail.js";
@@ -11,16 +18,35 @@ import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
 import { generateHTMLTable } from "./js/convert/pdf.js";
 import * as helpers from "./lib/helpers.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+  modulusLength: 2048,
+});
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const hbs = create({ helpers });
 app.use(express.json());
+app.use("/file-manager", files);
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  "/encryption",
+  encryption({
+    publicKey: publicKey,
+    privateKey: privateKey,
+  })
+);
+app.use(
+  "/decryption",
+  decryption({
+    publicKey: publicKey,
+    privateKey: privateKey,
+  })
+);
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", "./views");
-
+app.use("/secrets", secrets);
 app.get("/", (req, res) => {
   res.render("home", { title: "Home" });
 });
@@ -71,11 +97,8 @@ app.post("/js/email/*", (req, res) => {
 });
 
 app.post("/example/post", (req, res) => {
-  const { name } = req.body;
-  res.writeHead(200, { "Content-Type": "application/json" });
-  console.log("POST endpoint received " + JSON.stringify(req.body));
-  let resJson = '{"message": "received value ' + name + '"}';
-  res.end(resJson);
+  console.log(`POST endpoint received ${JSON.stringify(req.body)}`);
+  res.status(200).json({ message: `received value ${req.body.name}` });
 });
 
 app.listen(PORT, () => {
