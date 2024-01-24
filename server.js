@@ -61,14 +61,13 @@ app.post("/hbs/*", (req, res) => {
 });
 
 app.post("/js/convert/pdf", (req, res) => {
-  const filename = "chat-history";
   const template = fs
     .readFileSync(__dirname + "/views/pdf.handlebars")
     .toString();
   const dom = new JSDOM(template);
   generateHTMLTable(
-    req.body.data,
-    dom.window.document.getElementById("chatHistoryTable")
+    dom.window.document.getElementById("chatHistoryTable"),
+    req.body
   );
   generatePdfToBase64(dom.window.document.documentElement.innerHTML, res);
 });
