@@ -22,9 +22,9 @@ const extractAuthor = (message, csaTitleVisible, csaNameVisible) => {
   if(role === "buerokratt" || role === "chatbot")
     return "Bürokratt";
   if(role === 'backoffice-user') {
-    const name = (message.authorFirstName ?? "" + " " + message.authorLastName ?? "").trim();
-    const title = message.csaTitle;
-    const titleAndName = (title ?? "" + " " + name).trim();
+    const name = ((message.authorFirstName || "") + " " + (message.authorLastName || "")).trim();
+    const title = message.csaTitle || message.authorRole;
+    const titleAndName = (name + " " + title).trim();
 
     if(csaTitleVisible && csaNameVisible && titleAndName) return titleAndName;
     if(csaTitleVisible && title) return title;
