@@ -16,6 +16,7 @@ export const extractMessageInfo = (message, csaTitleVisible, csaNameVisible) => 
 
 const extractAuthor = (message, csaTitleVisible, csaNameVisible) => {
   const role = message.authorRole;
+  console.log('extractAuthor = ', role)
 
   if(role === "end-user")
     return "Klient";
@@ -25,6 +26,9 @@ const extractAuthor = (message, csaTitleVisible, csaNameVisible) => {
     const name = ((message.authorFirstName || "") + " " + (message.authorLastName || "")).trim();
     const title = message.csaTitle || message.authorRole;
     const titleAndName = (name + " " + title).trim();
+
+
+    console.log('backoffice-user info = ', { name, title, titleAndName })
 
     if(csaTitleVisible && csaNameVisible && titleAndName) return titleAndName;
     if(csaTitleVisible && title) return title;
