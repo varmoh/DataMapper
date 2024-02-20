@@ -7,8 +7,13 @@ export const generateHTMLTable = (chatHistoryTable, { messages, csaTitleVisible,
                   <th style="text-align: left">Aeg</th>
               </tr>`;
 
+  console.log('generateHTMLTable = ', csaTitleVisible, csaNameVisible)
+  console.log('rows = ')
+
   for (let i = 0; i < messages.length; i++) {
     const { author, message, date } = extractMessageInfo(messages[i], csaTitleVisible, csaNameVisible);
+
+    console.log('row number ', i, ' = ', author, message, date)
 
     _html += `<tr>
             <td style="border-bottom:1px solid lightgray">${author}</td>
