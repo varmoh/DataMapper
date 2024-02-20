@@ -27,7 +27,6 @@ const extractAuthor = (message, csaTitleVisible, csaNameVisible) => {
     const title = message.csaTitle || message.authorRole;
     const titleAndName = (name + " " + title).trim();
 
-
     console.log('backoffice-user info = ', { name, title, titleAndName })
 
     if(csaTitleVisible && csaNameVisible && titleAndName) return titleAndName;
