@@ -27,11 +27,26 @@ const extractAuthor = (message, csaTitleVisible, csaNameVisible) => {
     const title = message.csaTitle || message.authorRole;
     const titleAndName = (name + " " + title).trim();
 
-    console.log('backoffice-user info = ', { name, title, titleAndName })
+    console.log('backoffice-user info = ', { 
+      name, title, titleAndName, csaTitleVisible, csaNameVisible, 
+      case1: csaTitleVisible && csaNameVisible && titleAndName,
+      case2: csaTitleVisible && title,
+      case3: csaNameVisible && name
+    })
 
-    if(csaTitleVisible && csaNameVisible && titleAndName) return titleAndName;
-    if(csaTitleVisible && title) return title;
-    if(csaNameVisible && name) return name;
+    if(csaTitleVisible && csaNameVisible && titleAndName){
+      console.log('case1')
+       return titleAndName;
+      }
+    if(csaTitleVisible && title) {
+      console.log('case2')
+      return title;
+    }
+    if(csaNameVisible && name) {
+      console.log('case3')
+      return name;
+    }
+    console.log('case else')
     return "Klienditeenindaja";
   }
   return role;
