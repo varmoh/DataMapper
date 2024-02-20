@@ -68,3 +68,7 @@ export const readFile = function (filePath) {
   const data = fs.readFileSync(filePath, { encoding: "utf8" });
   return Buffer.from(data).toString();
 };
+
+export const parseBoolean = (value) => {
+  return value?.toLowerCase() === "true";
+}

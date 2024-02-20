@@ -16,6 +16,7 @@ import { generatePdf } from "./js/generate/pdf.js";
 import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
 import { generateHTMLTable } from "./js/convert/pdf.js";
 import * as helpers from "./lib/helpers.js";
+import { parseBoolean } from "./js/util/utils.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
   modulusLength: 2048,
@@ -65,9 +66,14 @@ app.post("/js/convert/pdf", (req, res) => {
     .readFileSync(__dirname + "/views/pdf.handlebars")
     .toString();
   const dom = new JSDOM(template);
+
+  const { messages, csaTitleVisible, csaNameVisible } = req.body;
+
   generateHTMLTable(
     dom.window.document.getElementById("chatHistoryTable"),
-    req.body
+    messages,
+    parseBoolean(csaTitleVisible),
+    parseBoolean(csaNameVisible),
   );
   generatePdfToBase64(dom.window.document.documentElement.innerHTML, res);
 });
