@@ -17,6 +17,8 @@ import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
 import { generateHTMLTable } from "./js/convert/pdf.js";
 import * as helpers from "./lib/helpers.js";
 import { parseBoolean } from "./js/util/utils.js";
+import conversion from "./controllers/conversion.js";
+import ruuter from "./controllers/ruuter.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
   modulusLength: 2048,
@@ -27,6 +29,8 @@ const app = express();
 const hbs = create({ helpers });
 app.use(express.json());
 app.use("/file-manager", files);
+app.use("/conversion", conversion);
+app.use("/ruuter", ruuter);
 app.use(express.urlencoded({ extended: true }));
 app.use(
   "/encryption",
@@ -73,7 +77,7 @@ app.post("/js/convert/pdf", (req, res) => {
     dom.window.document.getElementById("chatHistoryTable"),
     messages,
     parseBoolean(csaTitleVisible),
-    parseBoolean(csaNameVisible),
+    parseBoolean(csaNameVisible)
   );
   generatePdfToBase64(dom.window.document.documentElement.innerHTML, res);
 });
@@ -104,6 +108,8 @@ app.post("/example/post", (req, res) => {
   console.log(`POST endpoint received ${JSON.stringify(req.body)}`);
   res.status(200).json({ message: `received value ${req.body.name}` });
 });
+
+app.get("/status", (req, res) => res.status(200).send("ok"));
 
 app.listen(PORT, () => {
   console.log("Nodejs server running on http://localhost:%s", PORT);

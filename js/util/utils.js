@@ -71,4 +71,14 @@ export const readFile = function (filePath) {
 
 export const parseBoolean = (value) => {
   return value?.toLowerCase() === "true";
-}
+};
+
+export const getUrl = (dir) => {
+  let startIndex;
+  if (dir.includes("/POST")) {
+    startIndex = dir.indexOf("/POST") + "/POST".length;
+  } else {
+    startIndex = dir.indexOf("/GET") + "/GET".length;
+  }
+  return dir.substring(startIndex);
+};
