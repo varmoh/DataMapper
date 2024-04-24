@@ -71,4 +71,9 @@ router.post("/merge", async (req, res) => {
   return res.status(result.error ? 400 : 200).json(result);
 });
 
+router.post("/delete-intent", async (req, res) => {
+  const result = await deleteFile(req.body.file_path);
+  return res.status(result.error ? 400 : 200).json(result);
+});
+
 export default router;

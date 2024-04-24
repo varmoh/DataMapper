@@ -1,3 +1,5 @@
+import array from "lodash";
+
 export default async function merge(body) {
   const { array1, array2, iteratee } = body;
 
@@ -8,7 +10,7 @@ export default async function merge(body) {
     };
   }
 
-  const merged = array1.unionBy(array2, array1, iteratee);
+  const merged = array.unionBy(array2, array1, iteratee);
 
   return {
     error: false,

@@ -19,6 +19,12 @@ import * as helpers from "./lib/helpers.js";
 import { parseBoolean } from "./js/util/utils.js";
 import conversion from "./controllers/conversion.js";
 import ruuter from "./controllers/ruuter.js";
+import merge from "./controllers/merge.js";
+import cron from "./controllers/cron.js";
+import docker from "./controllers/docker.js";
+import object from "./controllers/object.js";
+import validate from "./controllers/validate.js";
+import utils from "./controllers/utils.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
   modulusLength: 2048,
@@ -31,6 +37,12 @@ app.use(express.json());
 app.use("/file-manager", files);
 app.use("/conversion", conversion);
 app.use("/ruuter", ruuter);
+app.use("/merge", merge);
+app.use("/cron", cron);
+app.use("/docker", docker);
+app.use("/object", object);
+app.use("/validate", validate);
+app.use("/utils", utils);
 app.use(express.urlencoded({ extended: true }));
 app.use(
   "/encryption",

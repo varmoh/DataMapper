@@ -2,10 +2,17 @@ import fs from "fs";
 import { buildContentFilePath, isValidFilePath } from "../util/utils.js";
 
 export default async function checkIfFileExists(file_path) {
-  if (!isValidFilePath(file_path)) {
+  if (!file_path) {
     return {
       error: true,
-      message: "path contains illegal characters",
+      message: "Filename is required",
+    };
+  }
+
+  if (file_path.includes("..")) {
+    return {
+      error: true,
+      message: "Relative paths are not allowed",
     };
   }
 
