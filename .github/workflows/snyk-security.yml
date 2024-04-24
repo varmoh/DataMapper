@@ -44,7 +44,7 @@ jobs:
 
       #   # Install Dependencies
       - name: Install Dependencies
-        run:  chmod 754 ./gradlew && ./gradlew -Pprod clean bootJar 
+        run:  npm install
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
