@@ -32,17 +32,21 @@ http://localhost:3000/js/my/restful/url/myScript
 
 _Note!_ URL must not end with `.js` extension.
 
-## Apple Silicon
+## Local Development
 
-If your are building the docker file for apple silicon please change
-
-`FROM node:19`
-
-To
+To develop the DataMapper, it's recommended to have [nvm](https://github.com/nvm-sh/nvm) installed, which will ensure you
+have the correct node and npm versions.
 
 ```
-FROM node:19-alpine
-RUN apk add --no-cache chromium
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# Install the required node version
+nvm install
+
+# Switch to the required node version
+nvm use
+
+# Install node dependencies
+npm install
+
+# Run the API
+npm start
 ```
