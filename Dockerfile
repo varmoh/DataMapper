@@ -14,6 +14,7 @@ RUN npm ci
 
 # Run image
 FROM build as run
+USER node
 COPY controllers controllers
 COPY views views
 COPY lib lib
