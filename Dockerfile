@@ -2,6 +2,7 @@
 FROM node:20.12.1-alpine as build
 WORKDIR /app
 EXPOSE 3000
+USER node
 
 ENV NODE_ENV=development
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
