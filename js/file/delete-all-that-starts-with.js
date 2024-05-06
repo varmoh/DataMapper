@@ -1,12 +1,20 @@
 import path from "path";
 import fs from "fs";
-import { buildContentFilePath } from "../util/utils.js";
+import { buildContentFilePath, isValidFilePath } from "../util/utils.js";
 
 export default async function deleteAllThatStartsWith(
   currentPath,
   keyword,
   res
 ) {
+
+  if (!isValidFilePath(currentPath)) {
+    return {
+      error: true,
+      message: 'File path contains illegal characters',
+    }
+  }
+
   const folderPath = buildContentFilePath(currentPath);
 
   fs.readdir(folderPath, (err, files) => {

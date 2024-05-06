@@ -17,5 +17,5 @@ export const generateHTMLTable = (chatHistoryTable, messages, csaTitleVisible, c
         </tr>`;
   }
 
-  chatHistoryTable.innerHTML = _html;
+  chatHistoryTable.innerText = _html;
 }
