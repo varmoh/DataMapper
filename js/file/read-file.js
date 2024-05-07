@@ -3,19 +3,19 @@ import { buildContentFilePath } from "../util/utils.js";
 import mime from "mime-types";
 
 export default async function readFile(file_path, res) {
-  const filePath = buildContentFilePath(file_path);
+  const filePath = fs.realpathSync(buildContentFilePath(file_path));
 
   if (!filePath) {
-    res.status(400).send("File path is required");
+    res.status(400).contentType("text/plain").send("File path is required");
     return;
   }
 
   if (filePath.includes("..")) {
-    res.status(400).send("Relative paths are not allowed");
+    res.status(400).contentType("text/plain").send("Relative paths are not allowed");
     return;
   }
   const mimeType = mime.lookup(filePath);
-  const name = filePath.split(/(\\|\/)/g).pop();
+  const name = filePath.split(/[\\/]/g).pop();
 
   fs.readFile(filePath, "utf-8", (err, data) => {
     if (err) {

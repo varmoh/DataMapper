@@ -1,5 +1,5 @@
 import fs from "fs";
-import { buildContentFilePath, isValidFilePath } from "../util/utils.js";
+import { buildContentFilePath } from "../util/utils.js";
 
 export default async function checkIfFileExists(file_path) {
   if (!file_path) {
@@ -17,7 +17,7 @@ export default async function checkIfFileExists(file_path) {
   }
 
   try {
-    const current_path = buildContentFilePath(file_path);
+    const current_path = fs.realpathSync(buildContentFilePath(file_path));
     fs.accessSync(current_path, fs.constants.F_OK);
     return {
       error: false,

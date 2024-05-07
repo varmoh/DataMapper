@@ -18,13 +18,8 @@ router.post("/object-list-contains-id", async (req, res) => {
 });
 
 function checkIdExists(array, id) {
-  if (!Array.isArray(array))
-    return;
-
-  for (let i = 0; i < array.length; i++) {
-    if (array[i].id === id) {
-      return true;
-    }
+  for (const element of array) {
+    if (element.id === id) return true;
   }
   return false;
 }
