@@ -88,7 +88,7 @@ app.use(
     privateKey: privateKey,
   })
 );
-
+app.use(express.json({limit: '1Mb'}));
 const handled = (controller) => async (req, res, next) => {
   try {
     await controller(req, res);
