@@ -33,7 +33,7 @@ export const buildContentFilePath = (fileName) => {
 };
 
 export const isValidFilename = (fileName) => {
-  return fileName && /^[0-9a-zA-Z-._/]+$/.test(fileName);
+  return fileName && /^[0-9a-zA-Z-._/õäöüÕÄÖÜ]+$/.test(fileName);
 };
 
 export const isValidFilePath = (filePath) => {
