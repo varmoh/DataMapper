@@ -14,7 +14,8 @@ export default async function moveFile(current_path, new_path) {
     const currentPath = buildContentFilePath(current_path);
     const newPath = buildContentFilePath(new_path);
 
-    fs.mkdirSync(path.dirname(newPath), { recursive: true });
+// TODO: restore fs.mkdir if needed to be   
+//    fs.mkdirSync(path.dirname(newPath), { recursive: true });
     fs.renameSync(currentPath, newPath);
 
     return {
