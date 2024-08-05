@@ -22,6 +22,7 @@ export default async function moveFile(current_path, new_path) {
       message: "File moved successfully",
     };
   } catch (err) {
+    console.log (err);
     return {
       error: true,
       message: "Unable to move file",
