@@ -16,7 +16,7 @@ export default async function moveFile(current_path, new_path) {
 
 // TODO: restore fs.mkdir if needed to be   
 //    fs.mkdirSync(path.dirname(newPath), { recursive: true });
-    fs.renameSync(currentPath, newPath);
+    fs.renameSync(current_path, new_path);
 
     return {
       error: false,
