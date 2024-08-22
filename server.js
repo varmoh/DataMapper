@@ -62,7 +62,7 @@ app.use(bodyParser.text());
 app.use(requestLoggerMiddleware({ logger: console.log }));
 
 app.use(express.json());
-app.use("/file", files);
+app.use("/file-manager", files);
 app.use("/conversion", conversion);
 app.use("/ruuter", ruuter);
 app.use("/merge", merge);
