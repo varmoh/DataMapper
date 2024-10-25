@@ -73,7 +73,7 @@ app.use("/validate", validate);
 app.use("/utils", utils);
 app.use("/domain", domain);
 app.use("/forms", forms);
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit:50000 }));
 app.use(
   "/encryption",
   encryption({
