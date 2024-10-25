@@ -89,6 +89,8 @@ app.use(
   })
 );
 app.use(express.json({limit: '10Mb'}));
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
+
 const handled = (controller) => async (req, res, next) => {
   try {
     await controller(req, res);
