@@ -73,7 +73,7 @@ app.use("/validate", validate);
 app.use("/utils", utils);
 app.use("/domain", domain);
 app.use("/forms", forms);
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
 app.use(
   "/encryption",
   encryption({
@@ -89,7 +89,6 @@ app.use(
   })
 );
 app.use(express.json({limit: '10Mb'}));
-app.use(express.urlencoded({ limit: '5mb', extended: true }));
 
 const handled = (controller) => async (req, res, next) => {
   try {
