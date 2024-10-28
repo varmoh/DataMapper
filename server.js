@@ -48,6 +48,7 @@ const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
 const hbs = create({ helpers });
 
 const PORT = process.env.PORT || 3000;
+const REQUEST_SIZE_LIMIT = '10mb';
 const app = express().disable("x-powered-by");
 const rateLimit = setRateLimit({
   windowMs: 60 * 1000,
@@ -57,7 +58,7 @@ const rateLimit = setRateLimit({
   statusCode: 429,
 });
 
-app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.json({ limit: REQUEST_SIZE_LIMIT }));
 app.use(bodyParser.text());
 app.use(requestLoggerMiddleware({ logger: console.log }));
 
@@ -72,7 +73,7 @@ app.use("/validate", validate);
 app.use("/utils", utils);
 app.use("/domain", domain);
 app.use("/forms", forms);
-app.use(express.urlencoded({ limit: '10mb', extended: true}));
+app.use(express.urlencoded({ limit: REQUEST_SIZE_LIMIT, extended: true }));
 app.use(
   "/encryption",
   encryption({
@@ -87,7 +88,7 @@ app.use(
     privateKey: privateKey,
   })
 );
-app.use(express.json({limit: '10mb'}));
+app.use(express.json({ limit: REQUEST_SIZE_LIMIT }));
 
 const handled = (controller) => async (req, res, next) => {
   try {
