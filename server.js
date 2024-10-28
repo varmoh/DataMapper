@@ -57,11 +57,10 @@ const rateLimit = setRateLimit({
   statusCode: 429,
 });
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.text());
 app.use(requestLoggerMiddleware({ logger: console.log }));
 
-app.use(express.json());
 app.use("/file-manager", files);
 app.use("/conversion", conversion);
 app.use("/ruuter", ruuter);
@@ -73,7 +72,7 @@ app.use("/validate", validate);
 app.use("/utils", utils);
 app.use("/domain", domain);
 app.use("/forms", forms);
-app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit:50000 }));
+app.use(express.urlencoded({ limit: '10mb', extended: true}));
 app.use(
   "/encryption",
   encryption({
@@ -88,7 +87,7 @@ app.use(
     privateKey: privateKey,
   })
 );
-app.use(express.json({limit: '50Mb'}));
+app.use(express.json({limit: '10mb'}));
 
 const handled = (controller) => async (req, res, next) => {
   try {
