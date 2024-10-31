@@ -48,7 +48,7 @@ const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
 const hbs = create({ helpers });
 
 const PORT = process.env.PORT || 3000;
-const REQUEST_SIZE_LIMIT = '10mb';
+const REQUEST_SIZE_LIMIT = '100mb';
 const app = express().disable("x-powered-by");
 const rateLimit = setRateLimit({
   windowMs: 60 * 1000,
