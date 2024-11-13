@@ -94,7 +94,7 @@ const buildEventTranslator = () => {
     unavailable_holiday: "Puhkus",
   };
 
-  return (event) => eventTranslation[event.toLowerCase()] || event;
+  return (event) => eventTranslation[event?.toLowerCase()] || event;
 };
 
 const eventTranslator = buildEventTranslator();
