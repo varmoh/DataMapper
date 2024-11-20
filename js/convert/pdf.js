@@ -12,11 +12,14 @@ export const generateHTMLTable = (
                   <th style="text-align: left">Aeg</th>
               </tr>`;
 
-  for (const element of messages) {
+  for (const [i, element] of messages.entries()) {
+    const previousMessage = i > 0 ? messages[i - 1] : null;
+
     const { author, message, date } = extractMessageInfo(
       element,
+      previousMessage,
       csaTitleVisible,
-      csaNameVisible
+      csaNameVisible,
     );
 
     _html += `<tr>

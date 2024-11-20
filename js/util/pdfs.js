@@ -1,5 +1,6 @@
 export const extractMessageInfo = (
   message,
+  previousMessage,
   csaTitleVisible,
   csaNameVisible
 ) => {
@@ -11,7 +12,15 @@ export const extractMessageInfo = (
   const content = message.content
     ? tryUnesacpe(message.content)
     : message.content;
-  const messageContent = content || extractEvent(message) || "-";
+  
+  let messageContent = "-";
+  if (content) {
+    messageContent = extractContent(message, previousMessage, content);
+  } else if (message.buttons) {
+    messageContent = extractButtons(message.buttons);
+  } else if (message.event) {
+    messageContent = extractEvent(message);
+  }
 
   return {
     author,
@@ -49,12 +58,35 @@ const tryUnesacpe = (content) => {
   }
 };
 
+const extractContent = (message, previousMessage, content) => {
+  if (
+    previousMessage?.buttons &&
+    previousMessage?.authorRole !== "end-user" &&
+    message.authorRole === "end-user"
+  ) {
+    const selectedButton = JSON.parse(previousMessage.buttons).find(
+      button => button.payload === message.content
+    );
+
+    return selectedButton?.title ?? content;
+  }
+
+  return content;
+};
+
 const extractEvent = (message) => {
   const translatedEvent = eventTranslator(message.event);
   if (!translatedEvent) {
     return translatedEvent;
   }
   return `<span style="color:purple"><b><small>${translatedEvent}</smal></b></span>`;
+};
+
+const extractButtons = (buttons) => {
+  return (
+    "Valige üks järgmistest valikutest: " +
+    JSON.parse(buttons).map((button) => button.title).join(", ")
+  );
 };
 
 const buildEventTranslator = () => {
@@ -94,7 +126,7 @@ const buildEventTranslator = () => {
     unavailable_holiday: "Puhkus",
   };
 
-  return (event) => eventTranslation[event?.toLowerCase()] || event;
+  return (event) => eventTranslation[event.toLowerCase()] || event;
 };
 
 const eventTranslator = buildEventTranslator();
