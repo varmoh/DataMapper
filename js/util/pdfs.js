@@ -124,6 +124,8 @@ const buildEventTranslator = () => {
     unavailable_organization: "Organisatsioon pole saadaval",
     unavailable_csas: "CSA-d pole saadaval",
     unavailable_holiday: "Puhkus",
+    ask_to_forward_to_csa: "Paluti vestlus klienditeenindajale üle kanda",
+    forwarded_to_backoffice: "Vestlus suunatakse tagasi kontorisse",
   };
 
   return (event) => eventTranslation[event.toLowerCase()] || event;
