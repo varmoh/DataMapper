@@ -75,11 +75,11 @@ const extractContent = (message, previousMessage, content) => {
 };
 
 const extractEvent = (message) => {
-  const translatedEvent = eventTranslator(message.event);
+  const translatedEvent = translateEvent(message.event);
   if (!translatedEvent) {
     return translatedEvent;
   }
-  return `<span style="color:purple"><b><small>${translatedEvent}</smal></b></span>`;
+  return `<span style="color:purple"><b><small>${translatedEvent}</small></b></span>`;
 };
 
 const extractButtons = (buttons) => {
@@ -89,8 +89,8 @@ const extractButtons = (buttons) => {
   );
 };
 
-const buildEventTranslator = () => {
-  const eventTranslation = {
+const translateEvent = (event) => {
+  const eventTranslations = {
     answered: "Vastatud",
     terminated: "Määramata",
     sent_to_csa_email: "Vestlus saadetud klienditeenindaja e-mailile",
@@ -128,7 +128,5 @@ const buildEventTranslator = () => {
     forwarded_to_backoffice: "Vestlus suunatakse tagasi kontorisse",
   };
 
-  return (event) => eventTranslation[event.toLowerCase()] || event;
-};
-
-const eventTranslator = buildEventTranslator();
+  return eventTranslations[event.toLowerCase()] ?? event;
+}

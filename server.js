@@ -2,8 +2,6 @@ import express from "express";
 import { create, engine } from "express-handlebars";
 import setRateLimit from "express-rate-limit";
 import { body, matchedData, validationResult } from "express-validator";
-import jsdom from "jsdom";
-const { JSDOM } = jsdom;
 import Papa from "papaparse";
 import secrets from "./controllers/secrets.js";
 import fs from "fs";
@@ -18,8 +16,8 @@ import { fileURLToPath } from "url";
 
 import sendMockEmail from "./js/email/sendMockEmail.js";
 import { generatePdf } from "./js/generate/pdf.js";
-import { generatePdfToBase64 } from "./js/generate/pdfToBase64.js";
-import { generateHTMLTable } from "./js/convert/pdf.js";
+import { convertHtmlToPdf } from "./js/generate/convertHtmlToPdf.js";
+import { generateMessagesTable } from "./js/convert/pdf.js";
 import * as helpers from "./lib/helpers.js";
 import {
   buildContentFilePath,
@@ -179,7 +177,7 @@ app.post(
       .withMessage("csaNameVisible is required and must be a string"),
   ],
   rateLimit,
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -190,15 +188,19 @@ app.post(
     const template = fs
       .readFileSync(__dirname + "/views/pdf.handlebars")
       .toString();
-    const dom = new JSDOM(template);
 
-    generateHTMLTable(
-      dom.window.document.getElementById("chatHistoryTable"),
+    const html = generateMessagesTable(
+      template,
       messages,
       parseBoolean(csaTitleVisible),
       parseBoolean(csaNameVisible)
     );
-    generatePdfToBase64(dom.window.document.documentElement.innerHTML, res);
+
+    try {
+      res.json({ response: await convertHtmlToPdf(html) });
+    } catch (error) {
+      res.status(500).json({message: "Error generating PDF"});
+    }
   }
 );
 
