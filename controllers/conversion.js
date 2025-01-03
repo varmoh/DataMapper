@@ -1,5 +1,5 @@
 import express from "express";
-import { stringify, parse } from "yaml";
+import { parse, stringify } from "yaml";
 import multer from "multer";
 import Papa from "papaparse";
 import base64ToText from "../js/util/base64ToText.js";
@@ -22,6 +22,34 @@ router.post("/yaml_to_json", multer().array("file"), (req, res) => {
 router.post("/json_to_yaml", (req, res) => {
   const result = stringify(req.body, { lineWidth: 0 });
   res.send({ json: result });
+});
+
+router.post("/json_to_yaml_domain", (req, res) => {
+  try {
+    let convertedYaml = stringify(req.body, { lineWidth: 0 });
+    const lines = convertedYaml.split("\n");
+
+    const processedLines = lines.map((line) => {
+      const trimmedLine = line.trim();
+      if (trimmedLine.startsWith("text:") || trimmedLine.startsWith("- text:")) {
+        const splitObject = line.split(":");
+        const prefix = splitObject[0];
+        const value = splitObject[1].trim();
+
+        if (!value.startsWith('"') || !value.endsWith('"')) {
+          const escapedValue = value.replace(/"/g, '\\"');
+          return `${prefix}: "${escapedValue}"`;
+        }
+        return line;
+      }
+      return line;
+    });
+
+    convertedYaml = processedLines.join("\n");
+    res.send({ json: convertedYaml });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create file", details: error.message });
+  }
 });
 
 router.post("/json_to_yaml_data", (req, res) => {
@@ -55,7 +83,7 @@ router.post(
   "/string-split",
   [
     body("data").isString().withMessage("data must be a string"),
-    body("separator").isString().withMessage("separator must be a string"),
+    body("separator").isString().withMessage("separator must be a string")
   ],
   (req, res) => {
     const errors = validationResult(req);
@@ -65,7 +93,7 @@ router.post(
 
     let { data, separator } = matchedData(req);
     res.json(
-      data.split(separator).filter(function (n) {
+      data.split(separator).filter(function(n) {
         return n;
       })
     );
@@ -110,7 +138,7 @@ router.post(
       .isArray()
       .optional()
       .withMessage("stories must be an array"),
-    body("rules").isArray().optional().withMessage("rules must be an array"),
+    body("rules").isArray().optional().withMessage("rules must be an array")
   ],
   (req, res) => {
     const errors = validationResult(req);
@@ -135,7 +163,7 @@ router.post(
                     formattedStep.intent = step.intent;
                     if (step.entities && step.entities.length > 0) {
                       formattedStep.entities = step.entities.map((entity) => ({
-                        [entity]: "",
+                        [entity]: ""
                       }));
                     }
                     break;
@@ -143,7 +171,7 @@ router.post(
                     formattedStep.action = step.action;
                     break;
                   case !!step.slot_was_set &&
-                    Object.keys(step.slot_was_set).length > 0:
+                  Object.keys(step.slot_was_set).length > 0:
                     formattedStep.slot_was_set = step.slot_was_set;
                     break;
                   case !!step.condition && step.condition.length > 0:
@@ -154,9 +182,9 @@ router.post(
                 }
                 return formattedStep;
               })
-              .filter((step) => Object.keys(step).length > 0),
+              .filter((step) => Object.keys(step).length > 0)
           }))
-          .filter((entry) => entry.steps.length > 0),
+          .filter((entry) => entry.steps.length > 0)
       };
     } else if (rules) {
       result = {
@@ -165,10 +193,10 @@ router.post(
           .map((entry) => ({
             rule: entry.rule,
             ...("conversation_start" in entry && {
-              conversation_start: entry.conversation_start,
+              conversation_start: entry.conversation_start
             }),
             ...("wait_for_user_input" in entry && {
-              wait_for_user_input: entry.wait_for_user_input,
+              wait_for_user_input: entry.wait_for_user_input
             }),
             steps: entry.steps
               .map((step) => {
@@ -178,7 +206,7 @@ router.post(
                     formattedStep.intent = step.intent;
                     if (step.entities && step.entities.length > 0) {
                       formattedStep.entities = step.entities.map((entity) => ({
-                        [entity]: "",
+                        [entity]: ""
                       }));
                     }
                     break;
@@ -186,7 +214,7 @@ router.post(
                     formattedStep.action = step.action;
                     break;
                   case !!step.slot_was_set &&
-                    Object.keys(step.slot_was_set).length > 0:
+                  Object.keys(step.slot_was_set).length > 0:
                     formattedStep.slot_was_set = step.slot_was_set;
                     break;
                   case !!step.condition && step.condition.length > 0:
@@ -197,9 +225,9 @@ router.post(
                 }
                 return formattedStep;
               })
-              .filter((step) => Object.keys(step).length > 0),
+              .filter((step) => Object.keys(step).length > 0)
           }))
-          .filter((entry) => entry.steps.length > 0),
+          .filter((entry) => entry.steps.length > 0)
       };
     } else {
       return res.status(400).json({ error: "Invalid request body" });
@@ -211,9 +239,9 @@ router.post(
           tag: "tag:yaml.org,2002:seq",
           format: "flow",
           test: (value) => value && value.length === 0,
-          resolve: () => "",
-        },
-      ],
+          resolve: () => ""
+        }
+      ]
     });
 
     res.json({ json: yamlString });
