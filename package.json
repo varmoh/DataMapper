@@ -22,7 +22,8 @@
     "papaparse": "^5.4.1",
     "puppeteer": "^23.9.0",
     "replace-in-file": "^6.3.5",
-    "yaml": "^2.2.1"
+    "yaml": "^2.2.1",
+    "chokidar": "^4.0.1"
   },
   "engines": {
     "node": "^20.13.1",

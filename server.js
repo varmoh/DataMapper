@@ -37,6 +37,7 @@ import utils from "./controllers/utils.js";
 import domain from "./controllers/domain.js";
 import forms from "./controllers/forms.js";
 import { requestLoggerMiddleware } from "./lib/requestLoggerMiddleware.js";
+import "./watchers/watcher.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
