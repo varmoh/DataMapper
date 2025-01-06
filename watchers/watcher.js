@@ -1,6 +1,7 @@
 import chokidar from "chokidar";
 import { execFile } from "child_process";
 import path from "path";
+import fs from 'fs';
 
 // Configurable environment variables
 const watchDirectory = process.env.WATCH_DIRECTORY || "/workspace/app"; // Directory to watch
