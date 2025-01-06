@@ -19,7 +19,14 @@ function logWithTimestamp(message) {
 // Function to run the sync script safely
 function runSyncScript() {
   logWithTimestamp("Running sync script...");
-  execFile("sh", [syncScriptPath], (error, stdout, stderr) => {
+  
+  // Ensure the script path exists
+  if (!fs.existsSync(syncScriptPath)) {
+    console.error(`Sync script does not exist at path: ${syncScriptPath}`);
+    return;
+  }
+
+  execFile("/bin/sh", [syncScriptPath], (error, stdout, stderr) => {
     if (error) {
       console.error(`Error running sync script: ${error.message}`);
       return;
@@ -28,8 +35,6 @@ function runSyncScript() {
       console.error(`Sync script stderr: ${stderr}`);
     }
     console.log(`Sync script output: ${stdout}`);
-    lastSyncTime = Date.now();
-    changes = []; // Reset change tracking after successful sync
   });
 }
 
