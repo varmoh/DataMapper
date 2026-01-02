@@ -33,7 +33,7 @@ jobs:
 
       - name: Set repo
         run: |
-           echo "DOCKER_TAG_CUSTOM=ghcr.io/${{ github.repository_owner }}/datamapper:$RELEASE-$VERSION.$BUILD.$FIX" >> $GITHUB_ENV
+           echo "DOCKER_TAG_CUSTOM=ghcr.io/${{ github.repository_owner }}/buerokratt-data-mapper:$RELEASE-$VERSION.$BUILD.$FIX" >> $GITHUB_ENV
 
       - name: Docker Build
         run: docker image build --tag $DOCKER_TAG_CUSTOM --no-cache .
