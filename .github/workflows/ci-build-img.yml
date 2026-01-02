@@ -39,7 +39,7 @@ jobs:
         run: docker image build --tag $DOCKER_TAG_CUSTOM --no-cache .
 
       - name: Log in to GitHub container registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin   # ✅ FIX
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u varmoh --password-stdin
 
       - name: Push Docker image to ghcr
         run: docker push $DOCKER_TAG_CUSTOM
